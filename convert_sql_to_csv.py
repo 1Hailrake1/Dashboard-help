@@ -62,7 +62,12 @@ async def update_links():
                     else:
                         output_text = await response.text()
                         api_url = json.loads(output_text)
-                        api_url = api_url[0]['URL']
+                        if len(api_url) == 2 and 'URL' in api_url[1]:
+                            url1 = api_url[0]['URL']
+                            url2 = api_url[1]['URL']
+                            api_url = url1 if len(url1) > len(url2) else url2
+                        else:
+                            api_url = api_url[0]['URL']
                     new_data.append({
                         "id": index,
                         "URL": destination_url,
