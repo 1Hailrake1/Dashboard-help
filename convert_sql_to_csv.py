@@ -1,7 +1,6 @@
 import asyncio
 import datetime
 import time
-
 import aiohttp
 import pyodbc
 import pandas as pd
@@ -14,11 +13,12 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
 import requests
 import json
+
 def schedule_daily_task():
     scheduler = AsyncIOScheduler()
 
     # Триггер для ежедневного запуска в 11:35
-    trigger = CronTrigger(hour=12, minute=30)
+    trigger = CronTrigger(hour=12, minute=40)
     scheduler.add_job(set_and_update_data, trigger, misfire_grace_time=50)
 
     # Запуск планировщика
@@ -54,7 +54,7 @@ async def update_links():
                 try:
                     document = row['Документ.Номер']
                     destination_url = f'{url}{document}'
-                    response = await session.get(url=destination_url)
+                    response = await session.get(url=destination_url, ssl=False)
                     if response.status != 200:
                         api_url = f'Error api request {response.status}'
                     elif 'File not found!' in await response.text():
